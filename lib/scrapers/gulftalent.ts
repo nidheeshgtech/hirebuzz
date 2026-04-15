@@ -1,28 +1,48 @@
 import * as cheerio from 'cheerio'
 import type { ScrapedJob } from './bayt'
+import { deriveCategory } from '@/lib/categories'
 
 const FALLBACK_JOBS: ScrapedJob[] = [
   {
-    title: 'Biology Teacher – IB Diploma',
-    company: 'Repton School Dubai',
+    title: 'Civil Engineer',
+    company: 'Emaar Properties',
     location: 'Dubai, UAE',
-    description: 'Teach IB Diploma Biology. Min 2 years teaching experience required. Competitive tax-free salary.',
-    url: 'https://www.gulftalent.com/jobs/biology-teacher-ib-diploma-repton',
+    description: 'Oversee civil works on large-scale residential and commercial projects in Dubai.',
+    url: 'https://www.gulftalent.com/jobs/civil-engineer-emaar',
     source: 'gulftalent',
+    category: 'construction',
   },
   {
-    title: 'Science & Biology Teacher',
-    company: 'Nord Anglia Education',
+    title: 'Registered Nurse',
+    company: 'Mediclinic Middle East',
     location: 'Dubai, UAE',
-    description: 'Deliver engaging Science and Biology lessons to KS3 and KS4 students.',
-    url: 'https://www.gulftalent.com/jobs/science-biology-teacher-nord-anglia',
+    description: 'Provide high-quality patient care in a leading private hospital network.',
+    url: 'https://www.gulftalent.com/jobs/registered-nurse-mediclinic',
     source: 'gulftalent',
+    category: 'healthcare',
+  },
+  {
+    title: 'HR Manager',
+    company: 'Majid Al Futtaim',
+    location: 'Dubai, UAE',
+    description: 'Lead HR operations and talent acquisition for a major retail conglomerate.',
+    url: 'https://www.gulftalent.com/jobs/hr-manager-maf',
+    source: 'gulftalent',
+    category: 'admin',
+  },
+  {
+    title: 'Head Chef',
+    company: 'Jumeirah Group',
+    location: 'Dubai, UAE',
+    description: 'Lead the kitchen team at a 5-star luxury hotel restaurant.',
+    url: 'https://www.gulftalent.com/jobs/head-chef-jumeirah',
+    source: 'gulftalent',
+    category: 'hospitality',
   },
 ]
 
 export async function scrapeGulfTalent(): Promise<ScrapedJob[]> {
-  const url =
-    'https://www.gulftalent.com/jobs/biology-teacher-jobs-in-dubai'
+  const url = 'https://www.gulftalent.com/uae/jobs'
 
   try {
     const res = await fetch(url, {
@@ -44,7 +64,6 @@ export async function scrapeGulfTalent(): Promise<ScrapedJob[]> {
     const $ = cheerio.load(html)
     const jobs: ScrapedJob[] = []
 
-    // GulfTalent job card selectors
     $('.job_listing, .job-listing, article.job').each((_, el) => {
       const titleEl = $(el).find('h2 a, h3 a, .job-title a')
       const companyEl = $(el).find('.company_name, .company-name, .employer')
@@ -65,6 +84,7 @@ export async function scrapeGulfTalent(): Promise<ScrapedJob[]> {
           description,
           url: href.startsWith('http') ? href : `https://www.gulftalent.com${href}`,
           source: 'gulftalent',
+          category: deriveCategory(title),
         })
       }
     })

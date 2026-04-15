@@ -83,7 +83,7 @@ export async function sendEmailAlerts(newJobs: Job[]) {
         </p>
       </div>
       <p style="color:#9ca3af;font-size:12px;padding:8px 0;text-align:center;">
-        HireBuzz · You're receiving this because you subscribed for Biology teacher job alerts.
+        HireBuzz · You're receiving this because you subscribed for job alerts in Dubai.
       </p>
     </div>
   `
@@ -93,7 +93,7 @@ export async function sendEmailAlerts(newJobs: Job[]) {
       await transporter.sendMail({
         from: `HireBuzz <${process.env.GMAIL_USER}>`,
         to: sub.email,
-        subject: `🐝 ${newJobs.length} New Biology Teacher Job${newJobs.length > 1 ? 's' : ''} in Dubai`,
+        subject: `🐝 ${newJobs.length} New Job${newJobs.length > 1 ? 's' : ''} in Dubai`,
         html,
       })
     } catch (err) {

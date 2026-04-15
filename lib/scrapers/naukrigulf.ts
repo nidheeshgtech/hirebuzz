@@ -1,28 +1,48 @@
 import * as cheerio from 'cheerio'
 import type { ScrapedJob } from './bayt'
+import { deriveCategory } from '@/lib/categories'
 
 const FALLBACK_JOBS: ScrapedJob[] = [
   {
-    title: 'Biology Teacher (Female)',
-    company: 'Gems Wellington International School',
+    title: 'Sales Executive',
+    company: 'Sobha Realty',
     location: 'Dubai, UAE',
-    description: 'We are looking for a qualified female Biology teacher. BSc/MSc in Biology with B.Ed required.',
-    url: 'https://www.naukrigulf.com/biology-teacher-jobs-in-dubai-1',
+    description: 'Drive property sales and build client relationships for a premium real estate developer.',
+    url: 'https://www.naukrigulf.com/sales-executive-sobha-1',
     source: 'naukrigulf',
+    category: 'marketing',
   },
   {
-    title: 'A-Level Biology Teacher',
+    title: 'Accountant',
+    company: 'PwC Middle East',
+    location: 'Dubai, UAE',
+    description: 'Provide audit and assurance services to clients across the UAE.',
+    url: 'https://www.naukrigulf.com/accountant-pwc-1',
+    source: 'naukrigulf',
+    category: 'finance',
+  },
+  {
+    title: 'Primary School Teacher',
     company: 'Dubai English Speaking College',
     location: 'Dubai, UAE',
-    description: 'Teach A-Level Biology to Year 12 and 13. UK-qualified candidates preferred.',
-    url: 'https://www.naukrigulf.com/biology-teacher-jobs-in-dubai-2',
+    description: 'Deliver engaging lessons to primary students following the British curriculum.',
+    url: 'https://www.naukrigulf.com/primary-teacher-desc-1',
     source: 'naukrigulf',
+    category: 'teaching',
+  },
+  {
+    title: 'Network Engineer',
+    company: 'du Telecom',
+    location: 'Dubai, UAE',
+    description: 'Design and maintain network infrastructure for a leading UAE telecom provider.',
+    url: 'https://www.naukrigulf.com/network-engineer-du-1',
+    source: 'naukrigulf',
+    category: 'engineering',
   },
 ]
 
 export async function scrapeNaukriGulf(): Promise<ScrapedJob[]> {
-  const url =
-    'https://www.naukrigulf.com/biology-teacher-jobs-in-dubai'
+  const url = 'https://www.naukrigulf.com/jobs-in-dubai'
 
   try {
     const res = await fetch(url, {
@@ -45,7 +65,6 @@ export async function scrapeNaukriGulf(): Promise<ScrapedJob[]> {
     const $ = cheerio.load(html)
     const jobs: ScrapedJob[] = []
 
-    // NaukriGulf job card selectors
     $('.job-details-main-box, .job-listing, .srp-jobtuple-wrapper, [data-job-id]').each((_, el) => {
       const titleEl = $(el).find('.job-title a, h2 a, .designation a')
       const companyEl = $(el).find('.comp-name, .company-name, .org-name')
@@ -66,6 +85,7 @@ export async function scrapeNaukriGulf(): Promise<ScrapedJob[]> {
           description,
           url: href.startsWith('http') ? href : `https://www.naukrigulf.com${href}`,
           source: 'naukrigulf',
+          category: deriveCategory(title),
         })
       }
     })

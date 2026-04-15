@@ -13,6 +13,7 @@ type Job = {
   description: string | null
   url: string
   source: string
+  category: string
   posted_at: string
   created_at: string
 }
@@ -100,7 +101,7 @@ export default function HomePage() {
               padding: '2px 8px',
               borderRadius: 12,
             }}>
-              Dubai Biology Teachers
+              Dubai Jobs
             </span>
           </div>
           <button
@@ -133,7 +134,7 @@ export default function HomePage() {
             Jobs in Dubai
           </h1>
           <p style={{ opacity: 0.85, fontSize: 14, marginBottom: 16 }}>
-            Scraped hourly from Bayt, GulfTalent &amp; NaukriGulf. Get instant alerts when new jobs appear.
+            Scraped daily from Bayt, GulfTalent, NaukriGulf, Indeed &amp; Adzuna. Get instant alerts when new jobs appear.
           </p>
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
             <div style={{

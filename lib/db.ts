@@ -12,9 +12,15 @@ export async function initDB() {
       description  TEXT,
       url          TEXT UNIQUE NOT NULL,
       source       TEXT NOT NULL,
+      category     TEXT NOT NULL DEFAULT 'general',
       posted_at    TIMESTAMPTZ DEFAULT NOW(),
       created_at   TIMESTAMPTZ DEFAULT NOW()
     )
+  `
+
+  // Add category column to existing tables that predate this migration
+  await sql`
+    ALTER TABLE jobs ADD COLUMN IF NOT EXISTS category TEXT NOT NULL DEFAULT 'general'
   `
 
   await sql`
@@ -44,6 +50,7 @@ export type Job = {
   description: string | null
   url: string
   source: string
+  category: string
   posted_at: string
   created_at: string
 }
@@ -58,8 +65,8 @@ export type PushSubscription = {
 export async function insertJob(job: Omit<Job, 'id' | 'created_at' | 'posted_at'>) {
   try {
     await sql`
-      INSERT INTO jobs (title, company, location, description, url, source)
-      VALUES (${job.title}, ${job.company}, ${job.location}, ${job.description}, ${job.url}, ${job.source})
+      INSERT INTO jobs (title, company, location, description, url, source, category)
+      VALUES (${job.title}, ${job.company}, ${job.location}, ${job.description}, ${job.url}, ${job.source}, ${job.category})
       ON CONFLICT (url) DO NOTHING
     `
     return true

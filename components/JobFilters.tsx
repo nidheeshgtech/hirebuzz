@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { CATEGORIES } from '@/lib/categories'
 
 type Job = {
   id: number
@@ -8,6 +9,7 @@ type Job = {
   company: string
   location: string
   source: string
+  category: string
   posted_at: string
   created_at: string
   description: string | null
@@ -24,10 +26,13 @@ const SOURCE_LABELS: Record<string, string> = {
   bayt: 'Bayt',
   gulftalent: 'GulfTalent',
   naukrigulf: 'NaukriGulf',
+  indeed: 'Indeed',
+  adzuna: 'Adzuna',
 }
 
 export default function JobFilters({ jobs, sources, onFilter }: Props) {
   const [search, setSearch] = useState('')
+  const [activeCategory, setActiveCategory] = useState<string>('all')
   const [activeSource, setActiveSource] = useState<string>('all')
   const [sortBy, setSortBy] = useState<'newest' | 'company'>('newest')
 
@@ -44,6 +49,10 @@ export default function JobFilters({ jobs, sources, onFilter }: Props) {
       )
     }
 
+    if (activeCategory !== 'all') {
+      result = result.filter((j) => j.category === activeCategory)
+    }
+
     if (activeSource !== 'all') {
       result = result.filter((j) => j.source === activeSource)
     }
@@ -55,7 +64,11 @@ export default function JobFilters({ jobs, sources, onFilter }: Props) {
     }
 
     onFilter(result)
-  }, [search, activeSource, sortBy, jobs, onFilter])
+  }, [search, activeCategory, activeSource, sortBy, jobs, onFilter])
+
+  // Only show categories that actually have jobs
+  const activeCategoryIds = new Set(jobs.map((j) => j.category))
+  const visibleCategories = CATEGORIES.filter((c) => activeCategoryIds.has(c.id))
 
   return (
     <div style={{
@@ -80,8 +93,28 @@ export default function JobFilters({ jobs, sources, onFilter }: Props) {
           marginBottom: 12,
           outline: 'none',
           background: 'var(--gray-50)',
+          boxSizing: 'border-box',
         }}
       />
+
+      {/* Category filter */}
+      {visibleCategories.length > 0 && (
+        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 10 }}>
+          <FilterChip
+            label="All Jobs"
+            active={activeCategory === 'all'}
+            onClick={() => setActiveCategory('all')}
+          />
+          {visibleCategories.map((cat) => (
+            <FilterChip
+              key={cat.id}
+              label={`${cat.emoji} ${cat.label}`}
+              active={activeCategory === cat.id}
+              onClick={() => setActiveCategory(cat.id)}
+            />
+          ))}
+        </div>
+      )}
 
       {/* Source filter + sort */}
       <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
@@ -142,6 +175,7 @@ function FilterChip({
         fontSize: 12,
         fontWeight: active ? 700 : 400,
         transition: 'all 0.15s',
+        cursor: 'pointer',
       }}
     >
       {label}

@@ -1,12 +1,20 @@
 import * as cheerio from 'cheerio'
 import type { ScrapedJob } from './bayt'
+import { deriveCategory } from '@/lib/categories'
 
 // Indeed RSS feed — free, no API key needed
 export async function scrapeIndeed(): Promise<ScrapedJob[]> {
   const queries = [
-    'biology+teacher',
-    'science+teacher+biology',
-    'biology+educator',
+    'teacher',
+    'engineer',
+    'developer',
+    'doctor',
+    'nurse',
+    'accountant',
+    'marketing+manager',
+    'chef',
+    'hr+manager',
+    'architect',
   ]
 
   const allJobs: ScrapedJob[] = []
@@ -17,8 +25,7 @@ export async function scrapeIndeed(): Promise<ScrapedJob[]> {
 
       const res = await fetch(url, {
         headers: {
-          'User-Agent':
-            'Mozilla/5.0 (compatible; RSS reader)',
+          'User-Agent': 'Mozilla/5.0 (compatible; RSS reader)',
           Accept: 'application/rss+xml, application/xml, text/xml',
         },
         signal: AbortSignal.timeout(12000),
@@ -34,17 +41,20 @@ export async function scrapeIndeed(): Promise<ScrapedJob[]> {
 
       $('item').each((_, el) => {
         const title = $(el).find('title').first().text().trim()
-        const link = $(el).find('link').first().text().trim() ||
-                     $(el).find('guid').first().text().trim()
-        const description = $(el).find('description').first().text()
-          .replace(/<[^>]*>/g, '') // strip HTML tags
+        const link =
+          $(el).find('link').first().text().trim() ||
+          $(el).find('guid').first().text().trim()
+        const description = $(el)
+          .find('description')
+          .first()
+          .text()
+          .replace(/<[^>]*>/g, '')
           .trim()
           .slice(0, 400)
 
-        // Extract company from description or source tag
         const source = $(el).find('source').first().text().trim()
 
-        if (title && link && title.toLowerCase().includes('bio')) {
+        if (title && link) {
           allJobs.push({
             title,
             company: source || 'See listing',
@@ -52,11 +62,12 @@ export async function scrapeIndeed(): Promise<ScrapedJob[]> {
             description,
             url: link,
             source: 'indeed',
+            category: deriveCategory(title),
           })
         }
       })
 
-      console.log(`[indeed] Query "${query}": found ${allJobs.length} total so far`)
+      console.log(`[indeed] Query "${query}": ${allJobs.length} total so far`)
     } catch (err) {
       console.warn(`[indeed] Query "${query}" failed:`, err)
     }
