@@ -54,7 +54,7 @@ export default function HomePage() {
     setScraping(true)
     setScrapeMsg('')
     try {
-      const res = await fetch('/api/cron/scrape')
+      const res = await fetch('/api/scrape', { method: 'POST' })
       const data = await res.json()
       if (data.ok) {
         setScrapeMsg(`Done! Found ${data.scraped} jobs, ${data.inserted} new.`)
