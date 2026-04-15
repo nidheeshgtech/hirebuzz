@@ -3,6 +3,8 @@ import { initDB, insertJob, getNewJobsSince } from '@/lib/db'
 import { scrapeBayt } from '@/lib/scrapers/bayt'
 import { scrapeGulfTalent } from '@/lib/scrapers/gulftalent'
 import { scrapeNaukriGulf } from '@/lib/scrapers/naukrigulf'
+import { scrapeIndeed } from '@/lib/scrapers/indeed'
+import { scrapeAdzuna } from '@/lib/scrapers/adzuna'
 import { sendPushNotifications, sendEmailAlerts } from '@/lib/notify'
 
 export const maxDuration = 60 // seconds
@@ -25,13 +27,19 @@ export async function GET(request: Request) {
     await initDB()
 
     // Run all scrapers concurrently
-    const [baytJobs, gulfJobs, naukriJobs] = await Promise.allSettled([
+    const [indeedJobs, adzunaJobs, baytJobs, gulfJobs, naukriJobs] = await Promise.allSettled([
+      scrapeIndeed(),
+      scrapeAdzuna(),
       scrapeBayt(),
       scrapeGulfTalent(),
       scrapeNaukriGulf(),
     ])
 
     const allJobs = [
+      // Primary sources (real APIs/RSS)
+      ...(indeedJobs.status === 'fulfilled' ? indeedJobs.value : []),
+      ...(adzunaJobs.status === 'fulfilled' ? adzunaJobs.value : []),
+      // Fallback HTML scrapers
       ...(baytJobs.status === 'fulfilled' ? baytJobs.value : []),
       ...(gulfJobs.status === 'fulfilled' ? gulfJobs.value : []),
       ...(naukriJobs.status === 'fulfilled' ? naukriJobs.value : []),

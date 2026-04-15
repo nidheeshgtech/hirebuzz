@@ -15,12 +15,16 @@ type Job = {
 }
 
 const SOURCE_COLORS: Record<string, string> = {
+  indeed: '#2164f3',
+  adzuna: '#ef4444',
   bayt: '#0ea5e9',
   gulftalent: '#8b5cf6',
   naukrigulf: '#f97316',
 }
 
 const SOURCE_LABELS: Record<string, string> = {
+  indeed: 'Indeed',
+  adzuna: 'Adzuna',
   bayt: 'Bayt',
   gulftalent: 'GulfTalent',
   naukrigulf: 'NaukriGulf',

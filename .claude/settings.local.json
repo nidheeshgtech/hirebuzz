@@ -2,7 +2,20 @@
   "permissions": {
     "allow": [
       "Bash(git init:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git branch:*)",
+      "Bash(git commit -m ':*)",
+      "Bash(gh auth:*)",
+      "Bash(git remote:*)",
+      "Bash(git push:*)",
+      "Bash(npm install:*)",
+      "Bash(node -e ':*)",
+      "Bash(node -e \"const crypto = require\\('crypto'\\); console.log\\('CRON_SECRET=' + crypto.randomBytes\\(32\\).toString\\('hex'\\)\\)\")",
+      "Bash(git commit --allow-empty -m ':*)",
+      "Bash(vercel --prod)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run:*)",
+      "Bash(vercel env:*)"
     ]
   }
 }
