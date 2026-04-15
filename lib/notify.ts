@@ -2,13 +2,13 @@ import webpush from 'web-push'
 import nodemailer from 'nodemailer'
 import { getAllPushSubscriptions, getAllEmailSubscribers, type Job } from './db'
 
-webpush.setVapidDetails(
-  process.env.VAPID_SUBJECT || 'mailto:hirebuzz@example.com',
-  process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || '',
-  process.env.VAPID_PRIVATE_KEY || ''
-)
-
 export async function sendPushNotifications(newJobs: Job[]) {
+  // Initialise VAPID at call-time so it doesn't crash during build
+  webpush.setVapidDetails(
+    process.env.VAPID_SUBJECT || 'mailto:hirebuzz@example.com',
+    process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || '',
+    process.env.VAPID_PRIVATE_KEY || ''
+  )
   if (newJobs.length === 0) return
 
   const subscriptions = await getAllPushSubscriptions()
