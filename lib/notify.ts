@@ -70,7 +70,7 @@ export async function sendEmailAlerts(newJobs: Job[]) {
     <div style="font-family:sans-serif;max-width:600px;margin:0 auto;">
       <div style="background:#2563eb;padding:20px 24px;border-radius:8px 8px 0 0;">
         <h1 style="color:#fff;margin:0;font-size:22px;">🐝 HireBuzz</h1>
-        <p style="color:#bfdbfe;margin:4px 0 0;">New Biology Teacher Jobs in Dubai</p>
+        <p style="color:#bfdbfe;margin:4px 0 0;">New Jobs in Dubai</p>
       </div>
       <div style="background:#fff;padding:20px 24px;border:1px solid #e5e7eb;border-top:none;">
         <p style="color:#374151;margin-top:0;">We found <strong>${newJobs.length} new job listing${newJobs.length > 1 ? 's' : ''}</strong> for you:</p>

@@ -130,7 +130,7 @@ export default function HomePage() {
           marginBottom: 24,
         }}>
           <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 6 }}>
-            Biology Teacher Jobs in Dubai
+            Jobs in Dubai
           </h1>
           <p style={{ opacity: 0.85, fontSize: 14, marginBottom: 16 }}>
             Scraped hourly from Bayt, GulfTalent &amp; NaukriGulf. Get instant alerts when new jobs appear.

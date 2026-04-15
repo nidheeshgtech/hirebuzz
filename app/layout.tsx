@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'HireBuzz — Biology Teacher Jobs in Dubai',
+  title: 'HireBuzz — Jobs in Dubai',
   description:
     'Real-time Biology teacher job alerts in Dubai. Updated hourly from Bayt, GulfTalent, and NaukriGulf.',
   manifest: '/manifest.json',
