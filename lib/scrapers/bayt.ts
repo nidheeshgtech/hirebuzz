@@ -16,7 +16,7 @@ const FALLBACK_JOBS: ScrapedJob[] = [
     title: 'Software Engineer',
     company: 'Careem',
     location: 'Dubai, UAE',
-    description: 'Build scalable backend services for the region's leading super app.',
+    description: "Build scalable backend services for the region's leading super app.",
     url: 'https://www.bayt.com/en/uae/jobs/software-engineer-careem/',
     source: 'bayt',
     category: 'engineering',
